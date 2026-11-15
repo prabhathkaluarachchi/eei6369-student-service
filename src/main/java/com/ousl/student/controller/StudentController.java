@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/students")
@@ -30,7 +31,12 @@ public class StudentController {
     }
 
     @PostMapping
-    public Student createStudent(@RequestBody Student student) {
+    public Student createStudent(@RequestBody Map<String, String> payload) {
+        Student student = new Student(
+                payload.get("registrationNo"),
+                payload.get("fullName"),
+                payload.get("degreeProgram")
+        );
         return repository.save(student);
     }
 

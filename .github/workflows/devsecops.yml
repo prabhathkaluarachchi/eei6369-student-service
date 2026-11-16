@@ -12,7 +12,7 @@ env:
 jobs:
   build-scan-push:
     name: Build, SAST, Container Scan & Push to ECR
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout source code

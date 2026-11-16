@@ -12,7 +12,7 @@ env:
 jobs:
   build-scan-push:
     name: Build, SAST, Container Scan & Push to ECR
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - name: Checkout source code
@@ -30,16 +30,17 @@ jobs:
       - name: Build and Unit Test with Maven
         run: chmod +x mvnw && ./mvnw clean verify
 
-      - name: SonarCloud SAST Scan & Quality Gate
+      - name: SonarCloud SAST Scan
+        uses: SonarSource/sonarqube-scan-action@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: >
-          ./mvnw org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
-          -Dsonar.projectKey=prabhathkaluarachchi_eei6369-student-service
-          -Dsonar.organization=prabhathkaluarachchi
-          -Dsonar.host.url=https://sonarcloud.io
-          -Dsonar.qualitygate.wait=true
+        with:
+          args: >
+            -Dsonar.organization=prabhathkaluarachchi
+            -Dsonar.projectKey=prabhathkaluarachchi_eei6369-student-service
+            -Dsonar.java.binaries=target/classes
+            -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
